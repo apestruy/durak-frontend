@@ -18,6 +18,9 @@ class GameContainer extends React.Component {
       pile: [],
       whoStarts: "",
       CompTrumpSuitArray: [],
+      compAttackCard: {},
+      playerClickCard: null,
+      shiftPlayerCard: null,
       cardValue: {
         "6": 6,
         "7": 7,
@@ -58,7 +61,6 @@ class GameContainer extends React.Component {
             trumpCard: trumpCard,
             pile: pile,
           },
-          //   () => console.log(this.state.trumpCard.suit)
           () => this.whoStartsGame()
         );
       });
@@ -74,7 +76,7 @@ class GameContainer extends React.Component {
         ? 1
         : -1;
     });
-    console.log("compTrumpResult", compResult);
+    // console.log("compTrumpResult", compResult);
     const PlayerTrumpSuitArray = this.state.playerCards;
     const playerResult = PlayerTrumpSuitArray.filter(
       (card) => card.suit === this.state.trumpCard.suit
@@ -84,7 +86,7 @@ class GameContainer extends React.Component {
         ? 1
         : -1;
     });
-    console.log("playerTrumpResult", playerResult);
+    // console.log("playerTrumpResult", playerResult);
     let whoStartsG = "";
     if (playerResult.length > 0) {
       if (compResult.length > 0) {
@@ -106,51 +108,70 @@ class GameContainer extends React.Component {
         whoStartsG = "computer";
       }
     }
-    this.setState({ whoStarts: whoStartsG });
+    this.setState({ whoStarts: whoStartsG }, () => this.gameBegins());
   };
 
-  // switch (true) {
-  //   case playerResult[0].value &&
-  //     compResult[0].value &&
-  //     this.state.cardValue[playerResult[0].value] <
-  //       this.state.cardValue[compResult[0].value]:
-  //     whoStartsG = "player";
-  //     break;
-  //   case playerResult[0].value &&
-  //     compResult[0].value &&
-  //     this.state.cardValue[playerResult[0].value] >
-  //       this.state.cardValue[compResult[0].value]:
-  //     whoStartsG = "computer";
-  //     break;
-  //   case playerResult[0].value && !compResult[0].value:
-  //     whoStartsG = "player";
-  //     break;
-  //   case compResult[0].value && !playerResult[0].value:
-  //     whoStartsG = "computer";
-  //     break;
-  //   default:
-  //     whoStartsG = "computer";
-  // }
+  gameBegins = () => {
+    console.log("who starts:", this.state.whoStarts);
+    // if (this.state.whoStarts === "computer") {
+
+    // }
+  };
+
+  compAttackFirst = (card) => {
+    // console.log("compAttackCard:", card);
+    this.setState({ compAttackCard: card });
+  };
+
+  handlePlayerClick = (card) => {
+    // console.log(card);
+    this.setState({ playerClickCard: card });
+  };
+
+  shiftPlayerCard = (card) => {
+    this.setState({ shiftPlayerCard: card });
+  };
 
   render() {
-    // console.log("comptrumpsuitarray", this.state.CompTrumpSuitArray);
-    console.log("trump card:", this.state.trumpCard.suit);
-    console.log("who starts:", this.state.whoStarts);
+    // console.log("compAttackCard:", this.state.compAttackCard);
+    // console.log("comp cards:", this.state.compCards);
+    // console.log("trump card:", this.state.trumpCard.suit);
+    // console.log("playerclickcard:", this.state.playerClickCard);
     return (
       <div>
         <div> GameContainer </div>
         <CompAvatar />
-        <CompCardsContainer compCards={this.state.compCards} />
-        <div> </div>
+        <CompCardsContainer
+          compCards={this.state.compCards}
+          cardValue={this.state.cardValue}
+          trumpCard={this.state.trumpCard}
+          compAttack={this.compAttackFirst}
+          whoStartsGame={this.state.whoStarts}
+        />
+        <div></div>
         <Guidance />
-        <PlayAreaContainer />
+        <PlayAreaContainer
+          compAttackCard={this.state.compAttackCard}
+          playerClickCard={this.state.playerClickCard}
+          handlePlayerClick={this.handlePlayerClick}
+          shiftPlayerCard={this.shiftPlayerCard}
+          compAttackFirst={this.compAttackFirst}
+          cardValue={this.state.cardValue}
+          trumpCard={this.state.trumpCard}
+        />
         <PileAreaContainer
           trumpCard={this.state.trumpCard}
           pile={this.state.pile}
         />
         <div></div>
-        <PlayerCardsContainer playerCards={this.state.playerCards} />
         <PlayerAvatar />
+        <PlayerCardsContainer
+          playerCards={this.state.playerCards}
+          cardValue={this.state.cardValue}
+          trumpCard={this.state.trumpCard}
+          handlePlayerClick={this.handlePlayerClick}
+          shiftPlayerCard={this.state.shiftPlayerCard}
+        />
       </div>
     );
   }

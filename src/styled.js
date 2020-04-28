@@ -90,14 +90,22 @@ export const PlayAreaDiv = styled.div`
 
 export const GuidDiv = styled.div`
   display: inline-block;
-  position: relative;
-  border: 2px solid palevioletred;
+  position: fixed;
   height: 300px;
   width: 200px;
-  right: 100px;
+  right: 1250px;
+  //   bottom: 400px;
+  border: 2px solid palevioletred;
 `;
 
 export const CompAvaDiv = styled.div`
+  display: inline-block;
+  position: relative;
+  right: 100px;
+  border: 2px solid palevioletred;
+`;
+
+export const PlayerAvaDiv = styled.div`
   display: inline-block;
   position: relative;
   right: 100px;

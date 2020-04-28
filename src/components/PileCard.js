@@ -3,8 +3,8 @@ import { PileH5, PCard, Image, PDiv } from "../styled";
 
 class PileCard extends React.Component {
   render() {
-    console.log(this.props.pile);
-    console.log(this.props.pile[this.props.pile.length - 1]);
+    // console.log(this.props.pile);
+    // console.log(this.props.pile[this.props.pile.length - 1]);
     return (
       <PDiv>
         {this.props.pile[this.props.pile.length - 1] ? (
@@ -16,6 +16,8 @@ class PileCard extends React.Component {
         <div>
           <PileH5>{this.props.pile.length} cards left</PileH5>
         </div>
+        <br></br>
+        <button>Take</button>
       </PDiv>
     );
   }

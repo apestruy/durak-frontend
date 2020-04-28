@@ -1,13 +1,23 @@
 import React from "react";
 import DefenseCard from "../components/DefenseCard";
 
-const DefenseContainer = (props) => {
-  return (
-    <div>
-      <div>DefenseContainer</div>
-      <DefenseCard />
-    </div>
-  );
-};
+class DefenseContainer extends React.Component {
+  renderDefenseCards = () => {
+    const cardsToRender = this.props.defenseArray;
+    return cardsToRender.map((card) => {
+      return <DefenseCard card={card} key={card.id} />;
+    });
+  };
+
+  render() {
+    console.log(this.props.defenseArray);
+    return (
+      <div>
+        <div>DefenseContainer</div>
+        {this.renderDefenseCards()}
+      </div>
+    );
+  }
+}
 
 export default DefenseContainer;
