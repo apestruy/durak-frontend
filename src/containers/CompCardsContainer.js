@@ -29,6 +29,7 @@ class CompCardsContainer extends React.Component {
         });
         Array.prototype.push.apply(sortedCards, sortedTrumpCards);
         this.setState({ sortedCards: sortedCards });
+        this.props.sendCompArray(sortedCards);
       } else {
         let sortedCards = cardsToRender.sort((a, b) => {
           return this.props.cardValue[a.value] > this.props.cardValue[b.value]
@@ -36,12 +37,26 @@ class CompCardsContainer extends React.Component {
             : -1;
         });
         this.setState({ sortedCards: sortedCards });
+        this.props.sendCompArray(sortedCards);
       }
     } else if (this.props.whoStartsGame !== prevProps.whoStartsGame) {
       if (this.props.whoStartsGame === "computer") {
         let cards = this.state.sortedCards;
         let attackCard = cards.shift();
         this.props.compAttack(attackCard);
+        this.setState({ sortedCards: cards });
+        this.props.sendCompArray(cards);
+      }
+    } else if (this.props.shiftCompCard !== prevProps.shiftCompCard) {
+      const cards = this.state.sortedCards;
+      let i = 0;
+      while (i < cards.length) {
+        const shiftedCard = cards[i];
+        if (shiftedCard === this.props.shiftCompCard) {
+          cards.splice(i, 1);
+        } else {
+          i += 1;
+        }
         this.setState({ sortedCards: cards });
       }
     }
@@ -54,7 +69,7 @@ class CompCardsContainer extends React.Component {
   };
 
   render() {
-    // console.log(this.state.sortedCards);
+    console.log(this.state.sortedCards);
     return <CompCont>{this.renderCompCards()}</CompCont>;
   }
 }

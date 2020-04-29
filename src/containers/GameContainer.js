@@ -18,9 +18,11 @@ class GameContainer extends React.Component {
       pile: [],
       whoStarts: "",
       CompTrumpSuitArray: [],
-      compAttackCard: {},
+      compAttackCard: null,
       playerClickCard: null,
       shiftPlayerCard: null,
+      shiftCompCard: null,
+      sendCompArray: null,
       cardValue: {
         "6": 6,
         "7": 7,
@@ -132,7 +134,16 @@ class GameContainer extends React.Component {
     this.setState({ shiftPlayerCard: card });
   };
 
+  shiftCompCard = (card) => {
+    this.setState({ shiftCompCard: card });
+  };
+
+  sendCompArray = (array) => {
+    this.setState({ sendCompArray: array });
+  };
+
   render() {
+    console.log("sendCompArray", this.state.sendCompArray);
     // console.log("compAttackCard:", this.state.compAttackCard);
     // console.log("comp cards:", this.state.compCards);
     // console.log("trump card:", this.state.trumpCard.suit);
@@ -147,6 +158,8 @@ class GameContainer extends React.Component {
           trumpCard={this.state.trumpCard}
           compAttack={this.compAttackFirst}
           whoStartsGame={this.state.whoStarts}
+          sendCompArray={this.sendCompArray}
+          shiftCompCard={this.state.shiftCompCard}
         />
         <div></div>
         <Guidance />
@@ -155,9 +168,11 @@ class GameContainer extends React.Component {
           playerClickCard={this.state.playerClickCard}
           handlePlayerClick={this.handlePlayerClick}
           shiftPlayerCard={this.shiftPlayerCard}
+          shiftCompCard={this.shiftCompCard}
           compAttackFirst={this.compAttackFirst}
           cardValue={this.state.cardValue}
           trumpCard={this.state.trumpCard}
+          sendCompArray={this.state.sendCompArray}
         />
         <PileAreaContainer
           trumpCard={this.state.trumpCard}

@@ -37,6 +37,18 @@ export const PlayerCont = styled.div`
   border: 2px solid palevioletred;
 `;
 
+export const AttackCont = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  border: 2px solid palevioletred;
+`;
+
+export const DefenseCont = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  border: 2px solid palevioletred;
+`;
+
 export const Card = styled.div`
   display: inline-block;
   position: relative;

@@ -1,5 +1,6 @@
 import React from "react";
 import AttackCard from "../components/AttackCard";
+import { AttackCont } from "../styled";
 
 class AttackContainer extends React.Component {
   renderAttackCards = () => {
@@ -11,12 +12,7 @@ class AttackContainer extends React.Component {
 
   render() {
     console.log(this.props.attackArray);
-    return (
-      <div>
-        <div>AttackContainer</div>
-        {this.renderAttackCards()}
-      </div>
-    );
+    return <AttackCont>{this.renderAttackCards()}</AttackCont>;
   }
 }
 
