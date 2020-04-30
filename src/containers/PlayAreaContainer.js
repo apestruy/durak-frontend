@@ -12,8 +12,9 @@ class PlayAreaContainer extends React.Component {
     playerDefends: false,
     compAttacks: false,
     compDefends: false,
-    newAttackCards: null,
+    newAttackCards: [],
     endTurn: false,
+    compDoneAttack: false,
   };
 
   componentDidUpdate = (prevProps) => {
@@ -26,8 +27,11 @@ class PlayAreaContainer extends React.Component {
     } else if (
       this.state.playerDefends &&
       newPlayerCard &&
-      this.state.attackArray.length === 1 &&
-      this.defenseCheck(newCompCard, newPlayerCard)
+      this.state.attackArray.length > 0 &&
+      this.defenseCheck(
+        this.state.attackArray[this.state.attackArray.length - 1],
+        newPlayerCard
+      )
     ) {
       this.defenseByPlayer(newPlayerCard);
     } else if (
@@ -35,35 +39,24 @@ class PlayAreaContainer extends React.Component {
       this.state.playAreaArray.length > 1
     ) {
       this.continueAttack(this.props.sendCompArray, this.props.shiftCompCard);
-      if (
-        this.state.defenseArray.length === this.state.attackArray.length &&
-        !this.state.compAttacks &&
-        !this.state.playerDefends
-      ) {
-        console.log("COMP ATTACK OVER!!!!!");
-
-        this.setState({
-          compAttacks: !this.state.compAttacks,
-          endTurn: true,
-        });
-      }
     } else if (
-      this.state.playerDefends &&
-      newPlayerCard &&
-      this.state.attackArray.length > 1 &&
-      this.defenseCheck(
-        this.state.attackArray[this.state.attackArray.length - 1],
-        newPlayerCard
-      )
+      this.state.defenseArray.length === this.state.attackArray.length &&
+      this.state.playerDefends === false &&
+      this.state.playAreaArray.length > 1 &&
+      this.state.newAttackCards.length === 0 &&
+      this.state.compDoneAttack
     ) {
-      this.defenseByPlayer(newPlayerCard);
-    } else if (this.state.endTurn && this.state.playerDefends === false) {
+      console.log("COMP ATTACK OVER!!!!!");
+      this.setState({
+        compAttacks: false,
+        endTurn: true,
+      });
+    } else if (this.state.endTurn) {
       console.log("CLEAR THE PLAY AREA!!!!!");
       this.setState({
         playAreaArray: [],
       });
     }
-
     console.log(this.state.defenseArray.length, this.state.attackArray.length);
   };
 
@@ -120,7 +113,7 @@ class PlayAreaContainer extends React.Component {
           attackArray: [...this.state.attackArray, newAttackCards[0]],
           playAreaArray: [...this.state.playAreaArray, newAttackCards[0]],
           newAttackCards: newAttackCards,
-          playerDefends: !this.state.playerDefends,
+          playerDefends: true,
         },
         () => this.shiftCards(func)
       );
@@ -129,7 +122,6 @@ class PlayAreaContainer extends React.Component {
 
   shiftCards = (func) => {
     let newAttackCards = this.state.newAttackCards;
-    console.log(newAttackCards);
     let attackCard = newAttackCards.shift();
     return func(attackCard);
   };
@@ -142,6 +134,7 @@ class PlayAreaContainer extends React.Component {
     console.log("play area array:", this.state.playAreaArray);
     console.log(this.props.playerClickCard);
     console.log("endturn:", this.state.endTurn);
+    console.log("new attack cards:", this.state.newAttackCards);
     return (
       <PlayAreaDiv>
         <div>PlayAreaContainer</div>
@@ -154,3 +147,11 @@ class PlayAreaContainer extends React.Component {
 }
 
 export default PlayAreaContainer;
+
+// } else if (
+//   this.state.playerDefends &&
+//   newPlayerCard &&
+//   this.state.attackArray.length === 1 &&
+//   this.defenseCheck(newCompCard, newPlayerCard)
+// ) {
+//   this.defenseByPlayer(newPlayerCard);
