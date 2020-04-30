@@ -8,8 +8,12 @@ class PlayAreaContainer extends React.Component {
     attackArray: [],
     defenseArray: [],
     playAreaArray: [],
-    playerTurn: false,
+    playerAttacks: false,
+    playerDefends: false,
+    compAttacks: false,
+    compDefends: false,
     newAttackCards: null,
+    endTurn: false,
   };
 
   componentDidUpdate = (prevProps) => {
@@ -17,40 +21,84 @@ class PlayAreaContainer extends React.Component {
     const newCompCard = this.props.compAttackCard;
     const defenseArray = this.state.defenseArray;
     const newPlayerCard = this.props.playerClickCard;
-    // console.log("new player card:", newPlayerCard);
     if (this.props.compAttackCard !== prevProps.compAttackCard) {
-      attackArray.push(newCompCard);
-      this.setState({
-        attackArray: attackArray,
-        playerTurn: true,
-        playAreaArray: [...this.state.playAreaArray, newCompCard],
-      });
+      this.compBeginsAttack();
     } else if (
-      this.state.playerTurn &&
+      this.state.playerDefends &&
       newPlayerCard &&
-      ((newPlayerCard.suit === newCompCard.suit &&
-        this.props.cardValue[newPlayerCard.value] >
-          this.props.cardValue[newCompCard.value]) ||
-        newPlayerCard.suit === this.props.trumpCard.suit)
+      this.state.attackArray.length === 1 &&
+      this.defenseCheck(newCompCard, newPlayerCard)
     ) {
-      this.props.shiftPlayerCard(newPlayerCard);
-      defenseArray.push(newPlayerCard);
-      this.setState({
-        defenseArray: defenseArray,
-        playerTurn: false,
-        playAreaArray: [...this.state.playAreaArray, newPlayerCard],
-      });
-      this.props.handlePlayerClick(null);
-    } else if (!this.state.playerTurn && this.state.playAreaArray.length > 0) {
+      this.defenseByPlayer(newPlayerCard);
+    } else if (
+      this.state.playerDefends === false &&
+      this.state.playAreaArray.length > 1
+    ) {
       this.continueAttack(this.props.sendCompArray, this.props.shiftCompCard);
+      if (
+        this.state.defenseArray.length === this.state.attackArray.length &&
+        !this.state.compAttacks &&
+        !this.state.playerDefends
+      ) {
+        console.log("COMP ATTACK OVER!!!!!");
+
+        this.setState({
+          compAttacks: !this.state.compAttacks,
+          endTurn: true,
+        });
+      }
+    } else if (
+      this.state.playerDefends &&
+      newPlayerCard &&
+      this.state.attackArray.length > 1 &&
+      this.defenseCheck(
+        this.state.attackArray[this.state.attackArray.length - 1],
+        newPlayerCard
+      )
+    ) {
+      this.defenseByPlayer(newPlayerCard);
+    } else if (this.state.endTurn && this.state.playerDefends === false) {
+      console.log("CLEAR THE PLAY AREA!!!!!");
+      this.setState({
+        playAreaArray: [],
+      });
     }
-    // else if (
-    //   this.state.playerTurn &&
-    //   newPlayerCard &&
-    //   this.state.attackArray.length > 1
-    // ) {
-    //   console.log("hiiiiiii");
-    // }
+
+    console.log(this.state.defenseArray.length, this.state.attackArray.length);
+  };
+
+  compBeginsAttack = () => {
+    const newCompCard = this.props.compAttackCard;
+    this.setState({
+      attackArray: [...this.state.attackArray, newCompCard],
+      playerDefends: true,
+      compAttacks: true,
+      playAreaArray: [...this.state.playAreaArray, newCompCard],
+    });
+  };
+
+  defenseCheck = (attackingCard, defendingCard) => {
+    // to make this work for the AI defending
+    // add in logic to go over all of its cards and see
+    // 1. if there is one that beats CARD i the same suit
+    // 2. if they have a cozar card (LATER)
+    // 3. if not, take the whole play area array
+    return (
+      (defendingCard.suit === attackingCard.suit &&
+        this.props.cardValue[defendingCard.value] >
+          this.props.cardValue[attackingCard.value]) ||
+      defendingCard.suit === this.props.trumpCard.suit
+    );
+  };
+
+  defenseByPlayer = (defendingCard) => {
+    this.props.shiftPlayerCard(defendingCard);
+    this.props.handlePlayerClick(null);
+    this.setState({
+      defenseArray: [...this.state.defenseArray, defendingCard],
+      playAreaArray: [...this.state.playAreaArray, defendingCard],
+      playerDefends: false,
+    });
   };
 
   continueAttack = (array, func) => {
@@ -66,78 +114,43 @@ class PlayAreaContainer extends React.Component {
         }
       }
     });
-    this.setState(
-      {
-        attackArray: [...this.state.attackArray, ...newAttackCards],
-        playAreaArray: [...this.state.playAreaArray, ...newAttackCards],
-        newAttackCards: newAttackCards,
-        playerTurn: !this.state.playerTurn,
-      },
-      () => this.shiftCards(func)
-    );
+    if (newAttackCards.length > 0) {
+      this.setState(
+        {
+          attackArray: [...this.state.attackArray, newAttackCards[0]],
+          playAreaArray: [...this.state.playAreaArray, newAttackCards[0]],
+          newAttackCards: newAttackCards,
+          playerDefends: !this.state.playerDefends,
+        },
+        () => this.shiftCards(func)
+      );
+    }
   };
 
   shiftCards = (func) => {
     let newAttackCards = this.state.newAttackCards;
-    return newAttackCards.map((card) => {
-      return func(card);
-    });
+    console.log(newAttackCards);
+    let attackCard = newAttackCards.shift();
+    return func(attackCard);
   };
 
   render() {
-    // console.log(this.props.compAttackCard);
-    console.log(this.state.playerTurn);
-    console.log(this.state.attackArray);
-    console.log(this.state.defenseArray);
-    console.log(this.state.playAreaArray);
+    console.log("player defends:", this.state.playerDefends);
+    console.log("comp attacks:", this.state.compAttacks);
+    console.log("attack array:", this.state.attackArray);
+    console.log("defense array:", this.state.defenseArray);
+    console.log("play area array:", this.state.playAreaArray);
     console.log(this.props.playerClickCard);
+    console.log("endturn:", this.state.endTurn);
     return (
       <PlayAreaDiv>
         <div>PlayAreaContainer</div>
         <AttackContainer attackArray={this.state.attackArray} />
         <br></br>
         <DefenseContainer defenseArray={this.state.defenseArray} />
-        {/* <p>hi</p>
-        <p>hi</p>
-        <p>Hi</p>
-        <p>Hi</p>
-        <p>Hi</p>
-        <p>Hi</p>
-      <p>Hi</p> */}
       </PlayAreaDiv>
     );
   }
 }
 
 export default PlayAreaContainer;
-
-// let newAttackCards = this.state.newAttackCards;
-// return newAttackCards.map((card) => {
-//   return this.props.shiftCompCard(card);
-// });
-
-// let newArr = this.props.sendCompArray.filter((card) => {
-//   for (let i = 0; i < this.state.playAreaArray.length; i++) {
-//     const item = this.state.playAreaArray[i];
-//     if (
-//       this.props.cardValue[card.value] ===
-//         this.props.cardValue[item.value] &&
-//       card.suit !== this.props.trumpCard.suit
-//     ) {
-//       return card;
-//     }
-//   }
-// });
-// this.setState({
-//   attackArray: [...this.state.attackArray, ...newArr],
-//   playerTurn: true,
-// });
-// let i = 0;
-//   while (i < this.state.playAreaArray.length) {
-//     const item = this.state.playAreaArray[i];
-//     const result = array.filter(card => {
-//       return (this.props.cardValue[card.value] === this.props.cardValue[item.value] && card.suit !== this.props.trumpCard.suit)
-//     })
-//     i += 1;
-//     console.log(result)
-//   }
