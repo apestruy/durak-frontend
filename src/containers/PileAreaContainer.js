@@ -11,7 +11,7 @@ const PileAreaContainer = (props) => {
       <br></br>
       <br></br>
       <TrumpCard trumpCard={props.trumpCard} />
-      <PileCard pile={props.pile} />
+      <PileCard pile={props.pile} handleTakeButton={props.handleTakeButton} />
     </PileAreaDiv>
   );
 };

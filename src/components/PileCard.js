@@ -17,7 +17,7 @@ class PileCard extends React.Component {
           <PileH5>{this.props.pile.length} cards left</PileH5>
         </div>
         <br></br>
-        <button>Take</button>
+        <button onClick={() => this.props.handleTakeButton(true)}>Take</button>
       </PDiv>
     );
   }

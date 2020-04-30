@@ -9,34 +9,7 @@ class PlayerCardsContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.playerCards !== prevProps.playerCards) {
-      const cardsToRender = this.props.playerCards;
-      const cardsWithoutTrump = cardsToRender.filter(
-        (card) => card.suit !== this.props.trumpCard.suit
-      );
-      if (cardsWithoutTrump.length > 0) {
-        let sortedCards = cardsWithoutTrump.sort((a, b) => {
-          return this.props.cardValue[a.value] > this.props.cardValue[b.value]
-            ? 1
-            : -1;
-        });
-        const trumpCards = cardsToRender.filter(
-          (card) => card.suit === this.props.trumpCard.suit
-        );
-        let sortedTrumpCards = trumpCards.sort((a, b) => {
-          return this.props.cardValue[a.value] > this.props.cardValue[b.value]
-            ? 1
-            : -1;
-        });
-        Array.prototype.push.apply(sortedCards, sortedTrumpCards);
-        this.setState({ sortedCards: sortedCards });
-      } else {
-        let sortedCards = cardsToRender.sort((a, b) => {
-          return this.props.cardValue[a.value] > this.props.cardValue[b.value]
-            ? 1
-            : -1;
-        });
-        this.setState({ sortedCards: sortedCards });
-      }
+      this.sortCards(this.props.playerCards);
     } else if (this.props.shiftPlayerCard !== prevProps.shiftPlayerCard) {
       const cards = this.state.sortedCards;
       let i = 0;
@@ -48,17 +21,51 @@ class PlayerCardsContainer extends React.Component {
           i += 1;
         }
         this.setState({ sortedCards: cards });
+        this.props.lengthPlayerHand(cards.length);
       }
-
-      // console.log(shiftedCard);
-      // console.log(this.props.shiftPlayerCard);
-      // console.log(cards);
-
-      // let shiftedCard = cards.filter((card) => {
-      //   return card === this.props.shiftPlayerCard;
-      // });
+    } else if (this.props.sendPlayAreaArray !== prevProps.sendPlayAreaArray) {
+      let oldCards = this.state.sortedCards;
+      Array.prototype.push.apply(oldCards, this.props.sendPlayAreaArray);
+      this.sortCards(oldCards);
     }
   }
+
+  sortCards = (array) => {
+    const cardsToRender = array;
+    const cardsWithoutTrump = cardsToRender.filter(
+      (card) => card.suit !== this.props.trumpCard.suit
+    );
+    if (cardsWithoutTrump.length > 0) {
+      let sortedCards = cardsWithoutTrump.sort((a, b) => {
+        return this.props.cardValue[a.value] > this.props.cardValue[b.value]
+          ? 1
+          : -1;
+      });
+      const trumpCards = cardsToRender.filter(
+        (card) => card.suit === this.props.trumpCard.suit
+      );
+      let sortedTrumpCards = trumpCards.sort((a, b) => {
+        return this.props.cardValue[a.value] > this.props.cardValue[b.value]
+          ? 1
+          : -1;
+      });
+      Array.prototype.push.apply(sortedCards, sortedTrumpCards);
+      this.setState({
+        sortedCards: sortedCards,
+      });
+      this.props.lengthPlayerHand(sortedCards.length);
+    } else {
+      let sortedCards = cardsToRender.sort((a, b) => {
+        return this.props.cardValue[a.value] > this.props.cardValue[b.value]
+          ? 1
+          : -1;
+      });
+      this.setState({
+        sortedCards: sortedCards,
+      });
+      this.props.lengthPlayerHand(sortedCards.length);
+    }
+  };
 
   renderPlayerCards = () => {
     return this.state.sortedCards.map((card) => {
@@ -73,43 +80,9 @@ class PlayerCardsContainer extends React.Component {
   };
 
   render() {
+    // console.log("PLAYER CARDS LENGTH:", this.state.sortedCards.length);
     return <PlayerCont>{this.renderPlayerCards()}</PlayerCont>;
   }
 }
 
 export default PlayerCardsContainer;
-
-// const cardsToRender = this.props.playerCards;
-// const cardsWithoutTrump = cardsToRender.filter(
-//   (card) => card.suit !== this.props.trumpCard.suit
-// );
-// if (cardsWithoutTrump.length > 0) {
-//   let sortedCards = cardsWithoutTrump.sort((a, b) => {
-//     return this.props.cardValue[a.value] > this.props.cardValue[b.value]
-//       ? 1
-//       : -1;
-//   });
-//   const trumpCards = cardsToRender.filter(
-//     (card) => card.suit === this.props.trumpCard.suit
-//   );
-//   let sortedTrumpCards = trumpCards.sort((a, b) => {
-//     return this.props.cardValue[a.value] > this.props.cardValue[b.value]
-//       ? 1
-//       : -1;
-//   });
-//   Array.prototype.push.apply(sortedCards, sortedTrumpCards);
-// } else {
-// let sortedCards = cardsToRender.sort((a, b) => {
-//   return this.props.cardValue[a.value] > this.props.cardValue[b.value]
-//     ? 1
-//     : -1;
-// });
-// return sortedCards.map((card) => {
-//   return (
-//     <PlayerCard
-//       card={card}
-//       key={card.id}
-//       handleClick={this.props.handlePlayerClick}
-//     />
-//   );
-// });
