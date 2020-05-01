@@ -30,6 +30,7 @@ class CompCardsContainer extends React.Component {
           i += 1;
         }
         this.setState({ sortedCards: cards });
+        this.props.sendCompArray(cards);
         this.props.lengthCompHand(cards.length);
       }
     }

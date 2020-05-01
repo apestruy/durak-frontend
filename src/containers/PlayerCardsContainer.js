@@ -21,6 +21,7 @@ class PlayerCardsContainer extends React.Component {
           i += 1;
         }
         this.setState({ sortedCards: cards });
+        this.props.sendPlayerArray(cards);
         this.props.lengthPlayerHand(cards.length);
       }
     } else if (this.props.sendPlayAreaArray !== prevProps.sendPlayAreaArray) {
@@ -50,9 +51,8 @@ class PlayerCardsContainer extends React.Component {
           : -1;
       });
       Array.prototype.push.apply(sortedCards, sortedTrumpCards);
-      this.setState({
-        sortedCards: sortedCards,
-      });
+      this.setState({ sortedCards: sortedCards });
+      this.props.sendPlayerArray(sortedCards);
       this.props.lengthPlayerHand(sortedCards.length);
     } else {
       let sortedCards = cardsToRender.sort((a, b) => {
@@ -60,9 +60,8 @@ class PlayerCardsContainer extends React.Component {
           ? 1
           : -1;
       });
-      this.setState({
-        sortedCards: sortedCards,
-      });
+      this.setState({ sortedCards: sortedCards });
+      this.props.sendPlayerArray(sortedCards);
       this.props.lengthPlayerHand(sortedCards.length);
     }
   };

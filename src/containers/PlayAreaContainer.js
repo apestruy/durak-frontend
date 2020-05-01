@@ -16,6 +16,7 @@ class PlayAreaContainer extends React.Component {
     playerAttacks: false,
     compDefends: false,
     playerDoneAttack: false,
+    didDefenderTake: false,
   };
 
   componentDidUpdate = (prevProps) => {
@@ -40,14 +41,19 @@ class PlayAreaContainer extends React.Component {
       console.log("PLAYER TAKES");
       this.props.sendPlayAreaArray(this.state.playAreaArray);
       this.props.handleTakeButton(false);
-      this.setState({
-        playerDefends: false,
-        compAttacks: false,
-        endTurn: true,
-        playAreaArray: [],
-        defenseArray: [],
-        attackArray: [],
-      });
+      this.setState(
+        {
+          compAttacks: false,
+          playerDefends: false,
+          compDoneAttack: true,
+          endTurn: true,
+          didDefenderTake: true,
+          playAreaArray: [],
+          defenseArray: [],
+          attackArray: [],
+        },
+        () => this.props.drawAtEndOfTurn(this.state.didDefenderTake, "computer")
+      );
     } else if (
       this.state.playerDefends === false &&
       this.state.compAttacks === true &&
@@ -136,11 +142,20 @@ class PlayAreaContainer extends React.Component {
         () => this.shiftCards(func)
       );
     } else {
-      this.setState({
-        compDoneAttack: true,
-        playerDefends: false,
-        compAttacks: false,
-      });
+      console.log("drawAtEndOfTurn");
+      this.setState(
+        {
+          compAttacks: false,
+          playerDefends: false,
+          compDoneAttack: true,
+          endTurn: true,
+          didDefenderTake: false,
+          playAreaArray: [],
+          defenseArray: [],
+          attackArray: [],
+        },
+        () => this.props.drawAtEndOfTurn(this.state.didDefenderTake, "computer")
+      );
     }
   };
 

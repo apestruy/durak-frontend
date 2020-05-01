@@ -23,6 +23,7 @@ class GameContainer extends React.Component {
       shiftPlayerCard: null,
       shiftCompCard: null,
       sendCompArray: null,
+      sendPlayerArray: null,
       sendPlayAreaArray: null,
       playerWantsToTake: false,
       lengthCompHand: null,
@@ -119,11 +120,92 @@ class GameContainer extends React.Component {
     );
   };
 
-  // lengthCheck = () => {
-  //   if (this.state.pile.length > 11 && ) {
+  drawAtEndOfTurn = (didDefenderTake, attacker) => {
+    if (didDefenderTake === false) {
+      if (attacker === "computer") {
+        let attackerHand = this.state.lengthCompHand;
+        let defenderHand = this.state.lengthPlayerHand;
+        if (attackerHand < 6) {
+          if (defenderHand < 6) {
+            let numCardsNeededPrevAttacker = 6 - attackerHand;
+            let numCardsNeededPrevDefender = 6 - defenderHand;
+            if (
+              numCardsNeededPrevAttacker + numCardsNeededPrevDefender >
+              this.state.pile.length
+            ) {
+              // split the pile and add to hands
+              // TODO: NOT WORRYING ABOUT ODD NUMS
+              // TODO: make sure we're splitting for attacker first
+              // TODO: currently assuming comp is attacker
+              let prevAttackerCards = this.state.pile.slice(
+                0,
+                numCardsNeededPrevAttacker
+              );
+              let prevDefenderCards = this.state.pile.slice(
+                numCardsNeededPrevAttacker
+              );
+              this.setState({
+                compCards: [...this.state.sendCompArray, ...prevAttackerCards],
+                playerCards: [
+                  ...this.state.sendPlayerArray,
+                  ...prevDefenderCards,
+                ],
+                pile: [],
+              });
+            } else {
+              // TODO: currently assuming comp is attacker
+              let prevAttackerCards = this.state.pile.slice(
+                0,
+                numCardsNeededPrevAttacker
+              );
+              let prevDefenderCards = this.state.pile.slice(
+                numCardsNeededPrevAttacker,
+                numCardsNeededPrevAttacker + numCardsNeededPrevDefender
+              );
+              this.setState({
+                compCards: [...this.state.sendCompArray, ...prevAttackerCards],
+                playerCards: [
+                  ...this.state.sendPlayerArray,
+                  ...prevDefenderCards,
+                ],
+                pile: this.state.pile.slice(
+                  numCardsNeededPrevAttacker + numCardsNeededPrevDefender
+                ),
+              });
+            }
+          } else {
+            this.onlyAttackerDraws();
+          }
+        }
+      }
+    } else {
+      this.onlyAttackerDraws();
+    }
+  };
 
-  //   }
-  // }
+  onlyAttackerDraws = () => {
+    let numCardsNeededPrevAttacker = 6 - this.state.lengthCompHand;
+    if (numCardsNeededPrevAttacker <= this.state.pile.length) {
+      let prevAttackerCards = this.state.pile.slice(
+        0,
+        numCardsNeededPrevAttacker
+      );
+      this.setState({
+        compCards: [...this.state.sendCompArray, ...prevAttackerCards],
+        pile: this.state.pile.slice(numCardsNeededPrevAttacker),
+      });
+    } else {
+      let prevAttackerCards = this.state.pile.slice(0);
+      this.setState({
+        compCards: [...this.state.sendCompArray, ...prevAttackerCards],
+        pile: [],
+      });
+    }
+  };
+  /*
+   * (when comp had been attacking before)
+   * if compDoneAttack && endTrue then playerAttack true
+   */
 
   lengthCompHand = (num) => {
     this.setState({ lengthCompHand: num });
@@ -153,6 +235,10 @@ class GameContainer extends React.Component {
     this.setState({ sendCompArray: array });
   };
 
+  sendPlayerArray = (array) => {
+    this.setState({ sendPlayerArray: array });
+  };
+
   sendPlayAreaArray = (array) => {
     this.setState({ sendPlayAreaArray: array });
   };
@@ -162,9 +248,11 @@ class GameContainer extends React.Component {
   };
 
   render() {
-    console.log("sendCompArray", this.state.sendCompArray);
+    // console.log("sendCompArray", this.state.sendCompArray);
     console.log("sendPlayAreaArray", this.state.sendPlayAreaArray);
     console.log("PILE:", this.state.pile.length);
+    console.log("compCards:", this.state.compCards);
+    console.log("playerCards:", this.state.playerCards);
     console.log("LENGTH COMP HAND:", this.state.lengthCompHand);
     console.log("LENGTH PLAYER HAND:", this.state.lengthPlayerHand);
     // console.log("compAttackCard:", this.state.compAttackCard);
@@ -200,6 +288,7 @@ class GameContainer extends React.Component {
           playerWantsToTake={this.state.playerWantsToTake}
           sendPlayAreaArray={this.sendPlayAreaArray}
           handleTakeButton={this.handleTakeButton}
+          drawAtEndOfTurn={this.drawAtEndOfTurn}
         />
         <PileAreaContainer
           trumpCard={this.state.trumpCard}
@@ -216,6 +305,7 @@ class GameContainer extends React.Component {
           shiftPlayerCard={this.state.shiftPlayerCard}
           sendPlayAreaArray={this.state.sendPlayAreaArray}
           lengthPlayerHand={this.lengthPlayerHand}
+          sendPlayerArray={this.sendPlayerArray}
         />
       </div>
     );
