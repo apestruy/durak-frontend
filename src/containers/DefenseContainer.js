@@ -11,7 +11,7 @@ class DefenseContainer extends React.Component {
   };
 
   render() {
-    console.log(this.props.defenseArray);
+    // console.log(this.props.defenseArray);
     return <DefenseCont>{this.renderDefenseCards()}</DefenseCont>;
   }
 }

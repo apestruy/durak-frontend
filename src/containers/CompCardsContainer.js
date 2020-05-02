@@ -9,17 +9,30 @@ class CompCardsContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.compCards !== prevProps.compCards) {
+      console.log(this.props.compCards);
       this.sortCards(this.props.compCards);
     } else if (this.props.whoStartsGame !== prevProps.whoStartsGame) {
       if (this.props.whoStartsGame === "computer") {
         let cards = this.state.sortedCards;
         let attackCard = cards.shift();
-        this.props.compAttack(attackCard);
+        this.props.compFirstAttackCard(attackCard);
         this.setState({ sortedCards: cards });
         this.props.sendCompArray(cards);
         this.props.lengthCompHand(cards.length);
       }
-    } else if (this.props.shiftCompCard !== prevProps.shiftCompCard) {
+    } else if (this.props.compWasAttacking && this.props.didPlayerTake) {
+      let cards = this.state.sortedCards;
+      let attackCard = cards.shift();
+      console.log("compNextAttackCard:", attackCard);
+      console.log(cards);
+      this.props.compNextAttackCard(attackCard);
+      this.setState({ sortedCards: cards }, () =>
+        this.helperMethod(cards, attackCard)
+      );
+    }
+    // !==
+    //   (prevProps.compWasAttacking && prevProps.didPlayerTake)) {
+    else if (this.props.shiftCompCard !== prevProps.shiftCompCard) {
       const cards = this.state.sortedCards;
       let i = 0;
       while (i < cards.length) {
@@ -36,6 +49,11 @@ class CompCardsContainer extends React.Component {
     }
   }
 
+  helperMethod = (cards, attackCard) => {
+    // this.props.compNextAttackCard(attackCard);
+    this.props.sendCompArray(cards);
+    this.props.lengthCompHand(cards.length);
+  };
   sortCards = (array) => {
     const cardsToRender = array;
     const cardsWithoutTrump = cardsToRender.filter(

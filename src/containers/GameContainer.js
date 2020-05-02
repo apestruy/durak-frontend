@@ -17,8 +17,10 @@ class GameContainer extends React.Component {
       trumpCard: {},
       pile: [],
       whoStarts: "",
-      CompTrumpSuitArray: [],
-      compAttackCard: null,
+      compWasAttacking: null,
+      didPlayerTake: null,
+      compFirstAttackCard: null,
+      compNextAttackCard: null,
       playerClickCard: null,
       shiftPlayerCard: null,
       shiftCompCard: null,
@@ -74,8 +76,8 @@ class GameContainer extends React.Component {
   }
 
   whoStartsGame = () => {
-    const CompTrumpSuitArray = this.state.compCards;
-    const compResult = CompTrumpSuitArray.filter(
+    const compTrumpSuitArray = this.state.compCards;
+    const compResult = compTrumpSuitArray.filter(
       (card) => card.suit === this.state.trumpCard.suit
     );
     compResult.sort((a, b) => {
@@ -84,8 +86,8 @@ class GameContainer extends React.Component {
         : -1;
     });
     // console.log("compTrumpResult", compResult);
-    const PlayerTrumpSuitArray = this.state.playerCards;
-    const playerResult = PlayerTrumpSuitArray.filter(
+    const playerTrumpSuitArray = this.state.playerCards;
+    const playerResult = playerTrumpSuitArray.filter(
       (card) => card.suit === this.state.trumpCard.suit
     );
     playerResult.sort((a, b) => {
@@ -202,11 +204,18 @@ class GameContainer extends React.Component {
       });
     }
   };
+
+  // getNextCompAttackCard = () => {
+  //   console.log("sashaaaaaaaaaa");
+  // };
   /*
    * (when comp had been attacking before)
    * if compDoneAttack && endTrue then playerAttack true
    */
 
+  // clearStartGame = (result) => {
+  //   this.setState({ whoStarts: result });
+  // };
   lengthCompHand = (num) => {
     this.setState({ lengthCompHand: num });
   };
@@ -215,8 +224,12 @@ class GameContainer extends React.Component {
     this.setState({ lengthPlayerHand: num });
   };
 
-  compAttackFirst = (card) => {
-    this.setState({ compAttackCard: card });
+  compFirstAttackCard = (card) => {
+    this.setState({ compFirstAttackCard: card });
+  };
+
+  compNextAttackCard = (card) => {
+    this.setState({ compNextAttackCard: card, didPlayerTake: false });
   };
 
   handlePlayerClick = (card) => {
@@ -243,20 +256,32 @@ class GameContainer extends React.Component {
     this.setState({ sendPlayAreaArray: array });
   };
 
-  handleTakeButton = (boolean) => {
-    this.setState({ playerWantsToTake: boolean });
+  handleTakeButton = (boolean, result) => {
+    this.setState({ playerWantsToTake: boolean, compNextAttackCard: result });
+  };
+
+  compWasAttacking = (boolean) => {
+    this.setState({ compWasAttacking: boolean });
+  };
+
+  didPlayerTake = (boolean) => {
+    this.setState({ didPlayerTake: boolean });
   };
 
   render() {
-    // console.log("sendCompArray", this.state.sendCompArray);
-    console.log("sendPlayAreaArray", this.state.sendPlayAreaArray);
-    console.log("PILE:", this.state.pile.length);
-    console.log("compCards:", this.state.compCards);
-    console.log("playerCards:", this.state.playerCards);
-    console.log("LENGTH COMP HAND:", this.state.lengthCompHand);
-    console.log("LENGTH PLAYER HAND:", this.state.lengthPlayerHand);
-    // console.log("compAttackCard:", this.state.compAttackCard);
-    console.log("PLAYER WANTS TO TAKE?", this.state.playerWantsToTake);
+    console.log("COMP WAS ATTACKING?:", this.state.compWasAttacking);
+    console.log("DID PLAYER TAKE?:", this.state.didPlayerTake);
+    console.log("WHO STARTS?:", this.state.whoStarts);
+    console.log("sendCompArray", this.state.sendCompArray);
+    // console.log("sendPlayAreaArray", this.state.sendPlayAreaArray);
+    // console.log("PILE:", this.state.pile.length);
+    // console.log("compCards:", this.state.compCards);
+    // console.log("playerCards:", this.state.playerCards);
+    // console.log("LENGTH COMP HAND:", this.state.lengthCompHand);
+    // console.log("LENGTH PLAYER HAND:", this.state.lengthPlayerHand);
+    console.log("compFirstAttackCard:", this.state.compFirstAttackCard);
+    console.log("compNextAttackCard:", this.state.compNextAttackCard);
+    // console.log("PLAYER WANTS TO TAKE?", this.state.playerWantsToTake);
     // console.log("trump card:", this.state.trumpCard.suit);
     // console.log("playerclickcard:", this.state.playerClickCard);
     return (
@@ -267,21 +292,27 @@ class GameContainer extends React.Component {
           compCards={this.state.compCards}
           cardValue={this.state.cardValue}
           trumpCard={this.state.trumpCard}
-          compAttack={this.compAttackFirst}
+          compFirstAttackCard={this.compFirstAttackCard}
+          compNextAttackCard={this.compNextAttackCard}
           whoStartsGame={this.state.whoStarts}
           sendCompArray={this.sendCompArray}
           shiftCompCard={this.state.shiftCompCard}
           lengthCompHand={this.lengthCompHand}
+          compWasAttacking={this.state.compWasAttacking}
+          didPlayerTake={this.state.didPlayerTake}
         />
         <div></div>
         <Guidance />
         <PlayAreaContainer
-          compAttackCard={this.state.compAttackCard}
+          compFirstAttackCard={this.state.compFirstAttackCard}
+          compNextAttackCard={this.state.compNextAttackCard}
+          // compNextAttackCard={this.compNextAttackCard}
+          // clearStartGame={this.clearStartGame}
           playerClickCard={this.state.playerClickCard}
           handlePlayerClick={this.handlePlayerClick}
           shiftPlayerCard={this.shiftPlayerCard}
           shiftCompCard={this.shiftCompCard}
-          compAttackFirst={this.compAttackFirst}
+          // compFirstAttackCard={this.compFirstAttackCard}
           cardValue={this.state.cardValue}
           trumpCard={this.state.trumpCard}
           sendCompArray={this.state.sendCompArray}
@@ -289,6 +320,9 @@ class GameContainer extends React.Component {
           sendPlayAreaArray={this.sendPlayAreaArray}
           handleTakeButton={this.handleTakeButton}
           drawAtEndOfTurn={this.drawAtEndOfTurn}
+          compWasAttacking={this.compWasAttacking}
+          didPlayerTake={this.didPlayerTake}
+          // getNextCompAttackCard={this.getNextCompAttackCard}
         />
         <PileAreaContainer
           trumpCard={this.state.trumpCard}
