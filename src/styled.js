@@ -28,25 +28,25 @@ export const CompCont = styled.div`
   display: inline-flex;
   flex-direction: row;
   //   position: relative;
-  border: 2px solid palevioletred;
+  // border: 2px solid palevioletred;
 `;
 
 export const PlayerCont = styled.div`
   display: inline-flex;
   flex-direction: row;
-  border: 2px solid palevioletred;
+  // border: 2px solid palevioletred;
 `;
 
 export const AttackCont = styled.div`
   display: inline-flex;
   flex-direction: row;
-  border: 2px solid palevioletred;
+  // border: 2px solid palevioletred;
 `;
 
 export const DefenseCont = styled.div`
   display: inline-flex;
   flex-direction: row;
-  border: 2px solid palevioletred;
+  // border: 2px solid palevioletred;
 `;
 
 export const Card = styled.div`

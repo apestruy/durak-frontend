@@ -113,7 +113,12 @@ class CompCardsContainer extends React.Component {
 
   render() {
     // console.log("COMP CARDS LENGTH:", this.state.sortedCards.length);
-    return <CompCont>{this.renderCompCards()}</CompCont>;
+    return (
+      <div>
+        <br></br>
+        <CompCont>{this.renderCompCards()}</CompCont>
+      </div>
+    );
   }
 }
 

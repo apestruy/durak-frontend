@@ -65,6 +65,7 @@ class GameContainer extends React.Component {
         for (let i = 13; i < shuffledCards.length; i++) {
           pile.push(shuffledCards[i]);
         }
+        pile.push(trumpCard);
         this.setState(
           {
             shuffledCards: shuffledCards,
@@ -413,8 +414,8 @@ class GameContainer extends React.Component {
     // console.log("WHO STARTS?:", this.state.whoStarts);
     return (
       <div>
-        <div> GameContainer </div>
-        <CompAvatar />
+        {/* <div> GameContainer </div> */}
+        {/* <CompAvatar /> */}
         <CompCardsContainer
           defender={this.state.defender}
           compCards={this.state.compCards}
@@ -462,7 +463,7 @@ class GameContainer extends React.Component {
           handleDoneButton={this.handleDoneButton}
         />
         <div></div>
-        <PlayerAvatar />
+        {/* <PlayerAvatar /> */}
         <PlayerCardsContainer
           defender={this.state.defender}
           playerCards={this.state.playerCards}

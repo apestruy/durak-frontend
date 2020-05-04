@@ -4,12 +4,11 @@ import { TCard, Image } from "../styled";
 const TrumpCard = (props) => {
   return (
     <div>
-      <TCard>
-        <Image src={props.trumpCard.imageUrl} alt="trump card" />
-        {/* <TrumpH5>
-          {props.trumpCard.value}, {props.trumpCard.suit}
-        </TrumpH5> */}
-      </TCard>
+      {props.pile[props.pile.length - 1] ? (
+        <TCard>
+          <Image src={props.trumpCard.imageUrl} alt="trump card" />
+        </TCard>
+      ) : null}
     </div>
   );
 };

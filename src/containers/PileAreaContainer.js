@@ -10,7 +10,7 @@ const PileAreaContainer = (props) => {
       <br></br>
       <br></br>
       <br></br>
-      <TrumpCard trumpCard={props.trumpCard} />
+      <TrumpCard trumpCard={props.trumpCard} pile={props.pile} />
       <PileCard
         pile={props.pile}
         handleTakeButton={props.handleTakeButton}

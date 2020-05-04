@@ -331,7 +331,8 @@ class PlayAreaContainer extends React.Component {
     console.log("WHO STARTS:", this.props.whoStartsGame);
     return (
       <PlayAreaDiv>
-        <div>PlayAreaContainer</div>
+        {/* <div>PlayAreaContainer</div> */}
+        <br></br>
         {this.state.attackArray[0] !== null &&
         this.state.attackArray !== null ? (
           <AttackContainer attackArray={this.state.attackArray} />

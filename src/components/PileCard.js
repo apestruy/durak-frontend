@@ -7,11 +7,21 @@ class PileCard extends React.Component {
     // console.log(this.props.pile[this.props.pile.length - 1]);
     return (
       <PDiv>
-        {this.props.pile[this.props.pile.length - 1] ? (
+        {this.props.pile.length > 1 ? (
           <PCard>
             <Image src={this.props.pile[this.props.pile.length - 1].imageUrl} />
           </PCard>
-        ) : null}
+        ) : (
+          <div>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+          </div>
+        )}
 
         <div>
           <PileH5>{this.props.pile.length} cards left</PileH5>

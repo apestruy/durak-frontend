@@ -11,7 +11,7 @@ import Stats from "./components/Stats";
 function App() {
   return (
     <div className="App">
-      <div>App</div>
+      <br></br>
       <NavBar />
       <Switch>
         <Route path="/login" component={Login} />
