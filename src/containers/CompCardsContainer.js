@@ -9,7 +9,6 @@ class CompCardsContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.compCards !== prevProps.compCards) {
-      console.log(this.props.compCards);
       this.sortCards(this.props.compCards);
     } else if (this.props.whoStartsGame !== prevProps.whoStartsGame) {
       if (this.props.whoStartsGame === "computer") {
@@ -21,18 +20,29 @@ class CompCardsContainer extends React.Component {
         this.props.lengthCompHand(cards.length);
       }
     } else if (this.props.compWasAttacking && this.props.didPlayerTake) {
+      console.log("num 1");
       let cards = this.state.sortedCards;
       let attackCard = cards.shift();
-      console.log("compNextAttackCard:", attackCard);
-      console.log(cards);
+      // console.log("compNextAttackCard:", attackCard);
+      // console.log(cards);
       this.props.compNextAttackCard(attackCard);
       this.setState({ sortedCards: cards }, () =>
         this.helperMethod(cards, attackCard)
       );
-    }
-    // !==
-    //   (prevProps.compWasAttacking && prevProps.didPlayerTake)) {
-    else if (this.props.shiftCompCard !== prevProps.shiftCompCard) {
+    } else if (
+      this.props.defender === "player" &&
+      this.props.playerWasAttacking
+    ) {
+      console.log("num 2");
+      let cards = this.state.sortedCards;
+      let attackCard = cards.shift();
+      // console.log("compNextAttackCard:", attackCard);
+      // console.log(cards);
+      this.props.compNextAttackCard(attackCard);
+      this.setState({ sortedCards: cards }, () =>
+        this.helperMethod(cards, attackCard)
+      );
+    } else if (this.props.shiftCompCard !== prevProps.shiftCompCard) {
       const cards = this.state.sortedCards;
       let i = 0;
       while (i < cards.length) {
@@ -46,6 +56,13 @@ class CompCardsContainer extends React.Component {
         this.props.sendCompArray(cards);
         this.props.lengthCompHand(cards.length);
       }
+    } else if (
+      this.props.sendPlayAreaArray !== prevProps.sendPlayAreaArray &&
+      this.props.defender === "computer"
+    ) {
+      let oldCards = this.state.sortedCards;
+      Array.prototype.push.apply(oldCards, this.props.sendPlayAreaArray);
+      this.sortCards(oldCards);
     }
   }
 

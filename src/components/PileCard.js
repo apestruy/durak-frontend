@@ -18,6 +18,8 @@ class PileCard extends React.Component {
         </div>
         <br></br>
         <button onClick={() => this.props.handleTakeButton(true)}>Take</button>
+        <br></br>
+        <button onClick={() => this.props.handleDoneButton(true)}>Done</button>
       </PDiv>
     );
   }

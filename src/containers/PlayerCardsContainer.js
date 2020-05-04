@@ -24,7 +24,10 @@ class PlayerCardsContainer extends React.Component {
         this.props.sendPlayerArray(cards);
         this.props.lengthPlayerHand(cards.length);
       }
-    } else if (this.props.sendPlayAreaArray !== prevProps.sendPlayAreaArray) {
+    } else if (
+      this.props.sendPlayAreaArray !== prevProps.sendPlayAreaArray &&
+      this.props.defender === "player"
+    ) {
       let oldCards = this.state.sortedCards;
       Array.prototype.push.apply(oldCards, this.props.sendPlayAreaArray);
       this.sortCards(oldCards);
