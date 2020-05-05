@@ -6,7 +6,7 @@ import { PileAreaDiv } from "../styled";
 const PileAreaContainer = (props) => {
   return (
     <PileAreaDiv>
-      <div>PileAreaContainer</div>
+      {/* <div>PileAreaContainer</div> */}
       <br></br>
       <br></br>
       <br></br>

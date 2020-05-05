@@ -84,10 +84,9 @@ class PlayerCardsContainer extends React.Component {
   render() {
     // console.log("PLAYER CARDS LENGTH:", this.state.sortedCards.length);
     return (
-      <div>
-        <br></br>
-        <PlayerCont>{this.renderPlayerCards()}</PlayerCont>
-      </div>
+      // <div>
+      <PlayerCont>{this.renderPlayerCards()}</PlayerCont>
+      // </div>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { PileH5, PCard, Image, PDiv } from "../styled";
+import { PileH3, PCard, Image, PDiv, PileAreaButton } from "../styled";
 
 class PileCard extends React.Component {
   render() {
@@ -9,7 +9,9 @@ class PileCard extends React.Component {
       <PDiv>
         {this.props.pile.length > 1 ? (
           <PCard>
-            <Image src={this.props.pile[this.props.pile.length - 1].imageUrl} />
+            <Image
+              src={this.props.pile[this.props.pile.length - 1].imageBack}
+            />
           </PCard>
         ) : (
           <div>
@@ -24,12 +26,15 @@ class PileCard extends React.Component {
         )}
 
         <div>
-          <PileH5>{this.props.pile.length} cards left</PileH5>
+          <br></br>
+          <PileH3>{this.props.pile.length} cards left</PileH3>
         </div>
-        <br></br>
-        <button onClick={() => this.props.handleTakeButton(true)}>Take</button>
-        <br></br>
-        <button onClick={() => this.props.handleDoneButton(true)}>Done</button>
+        <PileAreaButton onClick={() => this.props.handleTakeButton(true)}>
+          <strong>Take</strong>
+        </PileAreaButton>
+        <PileAreaButton onClick={() => this.props.handleDoneButton(true)}>
+          <strong>Done With Attack</strong>
+        </PileAreaButton>
       </PDiv>
     );
   }
