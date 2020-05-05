@@ -6,7 +6,7 @@ const NavBar = (props) => {
   return (
     <div style={{ display: "flex", justifyContent: "space-evenly" }}>
       <AppNameDiv>
-        <AppNameH1>Durak</AppNameH1>
+        <AppNameH1>DURAK</AppNameH1>
         <strong>The Russian Card Game</strong>
       </AppNameDiv>
       {/* <Link to="/login">Login</Link> */}

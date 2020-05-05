@@ -460,6 +460,7 @@ class GameContainer extends React.Component {
           trumpCard={this.state.trumpCard}
           pile={this.state.pile}
           handleTakeButton={this.handleTakeButton}
+          defender={this.state.defender}
           handleDoneButton={this.handleDoneButton}
         />
         <div></div>

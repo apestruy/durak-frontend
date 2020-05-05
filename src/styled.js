@@ -129,7 +129,7 @@ export const PileAreaButton = styled.div`
   padding: 0.4em;
   border: 2px solid navy;
   border-radius: 8px;
-  background-color: PaleTurquoise;
+  background-color: LightBlue;
   color: Navy;
 `;
 
@@ -139,8 +139,10 @@ export const NavButton = styled.button`
   padding: 0.55em 3em;
   border: 2px solid navy;
   border-radius: 9px;
-  background-color: PaleTurquoise;
+  background-color: LightBlue;
   color: Navy;
+  position: relative;
+  top: 11px;
 `;
 
 export const AppNameH1 = styled.h1`
@@ -153,10 +155,12 @@ export const AppNameH1 = styled.h1`
 export const AppNameDiv = styled.div`
   margin: 1em;
   padding: 1em;
-  border: 2px solid navy;
+  border: 2px solid sienna;
   border-radius: 8px;
-  background-color: PaleTurquoise;
-  color: Navy;
+  // background-color: LightSkyBlue;
+  background-color: Lightcyan;
+  color: navy;
   position: relative;
-  bottom: 15px;
+  bottom: 10px;
+  right: 35px;
 `;

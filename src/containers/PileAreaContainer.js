@@ -14,6 +14,7 @@ const PileAreaContainer = (props) => {
       <PileCard
         pile={props.pile}
         handleTakeButton={props.handleTakeButton}
+        defender={props.defender}
         handleDoneButton={props.handleDoneButton}
       />
     </PileAreaDiv>
