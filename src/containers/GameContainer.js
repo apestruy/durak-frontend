@@ -401,11 +401,11 @@ class GameContainer extends React.Component {
     // console.log("DID PLAYER TAKE?:", this.state.didPlayerTake);
     // console.log("sendCompArray", this.state.sendCompArray);
     // console.log("sendPlayAreaArray", this.state.sendPlayAreaArray);
-    // console.log("PILE:", this.state.pile.length);
+    console.log("PILE:", this.state.pile.length);
     // console.log("compCards:", this.state.compCards);
     // console.log("playerCards:", this.state.playerCards);
     // console.log("LENGTH COMP HAND:", this.state.lengthCompHand);
-    // console.log("LENGTH PLAYER HAND:", this.state.lengthPlayerHand);
+    console.log("LENGTH PLAYER HAND:", this.state.lengthPlayerHand);
     // console.log("compFirstAttackCard:", this.state.compFirstAttackCard);
     // console.log("compNextAttackCard:", this.state.compNextAttackCard);
     console.log("PLAYER WANTS TO TAKE?", this.state.playerWantsToTake);
@@ -446,6 +446,7 @@ class GameContainer extends React.Component {
           cardValue={this.state.cardValue}
           trumpCard={this.state.trumpCard}
           sendCompArray={this.state.sendCompArray}
+          lengthPlayerHand={this.state.lengthPlayerHand}
           playerWantsToTake={this.state.playerWantsToTake}
           playerIsDoneButton={this.state.playerIsDoneButton}
           sendPlayAreaArray={this.sendPlayAreaArray}
@@ -455,6 +456,7 @@ class GameContainer extends React.Component {
           compWasAttacking={this.compWasAttacking}
           playerWasAttacking={this.playerWasAttacking}
           didPlayerTake={this.didPlayerTake}
+          pile={this.state.pile.length}
         />
         <PileAreaContainer
           trumpCard={this.state.trumpCard}

@@ -164,3 +164,42 @@ export const AppNameDiv = styled.div`
   bottom: 10px;
   right: 35px;
 `;
+
+export const EndOfGameLoserDiv = styled.div`
+  margin: 1em;
+  padding: 1em;
+  border: 2px solid FireBrick;
+  border-radius: 8px;
+  background-color: LightBlue;
+  // background-color: SteelBlue;
+  color: FireBrick;
+  height: 90px;
+  width: 250px;
+  display: inline-block;
+  position: relative;
+  top: 77px;
+  font-size: 1.8em;
+`;
+
+export const EndOfGameWinnerDiv = styled.div`
+  margin: 1em;
+  padding: 1em;
+  border: 2px solid DarkMagenta;
+  border-radius: 8px;
+  background-color: LightBlue;
+  color: DarkMagenta;
+  height: 90px;
+  width: 250px;
+  display: inline-block;
+  position: relative;
+  top: 77px;
+  font-size: 1.8em;
+`;
+
+export const RestartButton = styled.button`
+  font-size: 0.4em;
+  border: 2px solid steelBlue;
+  border-radius: 8px;
+  background-color: steelBlue;
+  color: WhiteSmoke;
+`;

@@ -1,6 +1,7 @@
 import React from "react";
 import AttackContainer from "./AttackContainer";
 import DefenseContainer from "./DefenseContainer";
+import EndOfGame from "../components/EndOfGame";
 import { PlayAreaDiv } from "../styled";
 
 class PlayAreaContainer extends React.Component {
@@ -18,12 +19,48 @@ class PlayAreaContainer extends React.Component {
     compDefends: false,
     playerDoneAttack: false,
     didDefenderTake: false,
+    endOfGamePlayerLost: false,
+    endOfGamePlayerWon: false,
   };
 
   componentDidUpdate = (prevProps) => {
     const newPlayerCard = this.props.playerClickCard;
     if (this.props.compFirstAttackCard !== prevProps.compFirstAttackCard) {
+      console.log("num 1");
       this.compBeginsAttack();
+    } else if (
+      (this.props.lengthPlayerHand === 0 &&
+        this.props.sendCompArray.length > 0 &&
+        this.state.playerAttacks &&
+        this.props.pile === 0) ||
+      (this.props.lengthPlayerHand === 0 &&
+        this.state.compAttacks &&
+        this.props.pile === 0) ||
+      (this.state.compDoneAttack &&
+        this.props.lengthPlayerHand === 0 &&
+        this.props.pile === 0)
+    ) {
+      console.log("PLAYER WON!");
+      this.endOfGamePlayerWon();
+      this.props.defender("");
+    } else if (
+      (this.props.compNextAttackCard === undefined &&
+        this.state.compDoneAttack &&
+        this.state.didDefenderTake &&
+        this.state.playerDefends === false) ||
+      (!this.props.compNextAttackCard &&
+        !this.props.sendCompArray &&
+        this.state.playerAttacks) ||
+      ((!this.props.sendCompArray ||
+        this.props.sendCompArray.length === 0 ||
+        !this.props.sendCompArray[0]) &&
+        this.state.playerAttacks &&
+        this.props.pile === 0)
+    ) {
+      console.log("num 4");
+      console.log("GAME OVER! Computer won :(");
+      this.endOfGamePlayerLost();
+      this.props.defender("");
     } else if (
       this.state.playerDefends &&
       this.state.compAttacks === false &&
@@ -34,21 +71,27 @@ class PlayAreaContainer extends React.Component {
         newPlayerCard
       )
     ) {
+      console.log("num 2");
       this.defenseByPlayer(newPlayerCard);
     } else if (
       this.state.playerDefends === false &&
       this.state.compAttacks === true &&
-      this.state.playAreaArray.length > 1
+      this.state.playAreaArray.length > 1 &&
+      this.props.lengthPlayerHand > 1
     ) {
+      console.log("num 3");
       this.compAttackCheck(this.props.sendCompArray, this.props.shiftCompCard);
     } else if (
       this.props.compNextAttackCard !== null &&
       this.state.compDoneAttack &&
       this.state.didDefenderTake &&
+      // this.props.sendCompArray.length > 1 &&
       this.state.playerDefends === false
     ) {
+      console.log("num 5");
       this.compAttacksAgain();
     } else if (this.props.playerWantsToTake && this.state.playerDefends) {
+      console.log("num 6");
       this.playerTakes();
     } else if (
       this.props.whoStartsGame !== prevProps.whoStartsGame &&
@@ -61,35 +104,57 @@ class PlayAreaContainer extends React.Component {
       this.props.playerClickCard !== prevProps.playerClickCard &&
       this.state.endTurn === false
     ) {
+      console.log("num 7");
       const newPlayerAttackCard = this.props.playerClickCard;
       this.moveByPlayer(newPlayerAttackCard);
       // console.log("move by player");
       // console.log("PLAYER CLICKED THIS:", this.props.playerClickCard);
-    } else if (this.state.compDefends) {
+    } else if (this.state.compDefends && this.state.attackArray.length > 0) {
+      console.log("num 8");
       this.compDefendCheck(
         this.state.attackArray[this.state.attackArray.length - 1],
         this.props.sendCompArray,
         this.props.shiftCompCard
       );
     } else if (
+      // (this.props.playerIsDoneButton && this.state.playerAttacks === false) ||
+      this.props.playerIsDoneButton &&
+      this.state.playerAttacks &&
+      this.state.endTurn
+    ) {
+      this.props.handleDoneButton(false);
+    } else if (
       this.props.playerIsDoneButton &&
       this.state.playerAttacks &&
       this.state.playAreaArray.length > 1
     ) {
+      console.log("num 9");
       this.playerDoneAttacking();
     } else if (
+      this.state.playerAttacks &&
+      this.state.playAreaArray.length > 1 &&
+      this.props.lengthPlayerHand === 0 &&
+      this.props.pile > 0
+    ) {
+      this.playerDoneAttacking();
+    } else if (
+      this.state.playerAttacks === false &&
       this.props.compNextAttackCard !== null &&
+      this.props.sendCompArray.length > 0 &&
       this.state.playerDoneAttack
     ) {
+      console.log("num 10");
       this.compAttacksAgain();
     } else if (
       this.state.playerAttacks &&
       this.state.endTurn &&
       this.props.playerClickCard
     ) {
+      console.log("num 11");
       const newPlayerAttackCard = this.props.playerClickCard;
       this.moveByPlayer(newPlayerAttackCard);
     }
+
     console.log(this.state.defenseArray.length, this.state.attackArray.length);
   };
 
@@ -128,7 +193,8 @@ class PlayAreaContainer extends React.Component {
       (defendingCard.suit === attackingCard.suit &&
         this.props.cardValue[defendingCard.value] >
           this.props.cardValue[attackingCard.value]) ||
-      defendingCard.suit === this.props.trumpCard.suit
+      (defendingCard.suit === this.props.trumpCard.suit &&
+        attackingCard.suit !== this.props.trumpCard.suit)
     );
   };
 
@@ -177,6 +243,7 @@ class PlayAreaContainer extends React.Component {
         playAreaArray: [...this.state.playAreaArray, attackingCard],
         playerAttacks: false,
         compDefends: true,
+        endTurn: false,
       }
       // () => this.props.defender("computer")
     );
@@ -272,9 +339,11 @@ class PlayAreaContainer extends React.Component {
   compDefendCheck = (attackingCard, array, func) => {
     let newDefendCards = array.filter((card) => {
       if (
-        card.suit === attackingCard.suit &&
-        this.props.cardValue[card.value] >
-          this.props.cardValue[attackingCard.value]
+        (card.suit === attackingCard.suit &&
+          this.props.cardValue[card.value] >
+            this.props.cardValue[attackingCard.value]) ||
+        (card.suit === this.props.trumpCard.suit &&
+          attackingCard.suit !== this.props.trumpCard.suit)
       ) {
         return card;
       }
@@ -311,32 +380,83 @@ class PlayAreaContainer extends React.Component {
     }
   };
 
+  endOfGamePlayerWon = () => {
+    this.setState({
+      attackArray: [],
+      defenseArray: [],
+      playAreaArray: [],
+      newAttackCards: [],
+      newDefendCards: [],
+      compAttacks: false,
+      playerDefends: false,
+      compDoneAttack: false,
+      endTurn: false,
+      playerAttacks: false,
+      compDefends: false,
+      playerDoneAttack: false,
+      didDefenderTake: false,
+      endOfGamePlayerWon: true,
+    });
+  };
+
+  endOfGamePlayerLost = () => {
+    this.setState({
+      attackArray: [],
+      defenseArray: [],
+      playAreaArray: [],
+      newAttackCards: [],
+      newDefendCards: [],
+      compAttacks: false,
+      playerDefends: false,
+      compDoneAttack: false,
+      endTurn: false,
+      playerAttacks: false,
+      compDefends: false,
+      playerDoneAttack: false,
+      didDefenderTake: false,
+      endOfGamePlayerLost: true,
+    });
+  };
+  renderAttackContainer = () => {
+    if (
+      this.state.attackArray[0] !== null &&
+      this.state.attackArray !== null &&
+      this.state.attackArray[0] !== undefined &&
+      this.state.attackArray !== undefined
+    ) {
+      return <AttackContainer attackArray={this.state.attackArray} />;
+    }
+  };
+
   render() {
+    console.log("this.props.playerIsDoneButton", this.props.playerIsDoneButton);
+    console.log("endOfGamePlayerLost", this.state.endOfGamePlayerLost);
     console.log("COMP ATTACKS:", this.state.compAttacks);
     console.log("PLAYERS DEFENDS:", this.state.playerDefends);
     console.log("END TURN:", this.state.endTurn);
     console.log("COMP DONE ATTACK:", this.state.compDoneAttack);
     console.log("NEXT COMP CARD:", this.props.compNextAttackCard);
-    // // console.log("COMP HAND:", this.props.sendCompArray);
+    console.log("COMP HAND:", this.props.sendCompArray);
+    console.log("PLAYER HAND", this.props.lengthPlayerHand);
     // // console.log("playerWantsToTake:", this.props.playerWantsToTake);
-    // console.log("DID DEFENDER TAKE?:", this.state.didDefenderTake);
-    // // console.log("PLAYER ATTACKS:", this.state.playerAttacks);
+    console.log("DID DEFENDER TAKE?:", this.state.didDefenderTake);
+    console.log("PLAYER ATTACKS:", this.state.playerAttacks);
     // // console.log("COMP DEFENDS:", this.state.compDefends);
     // // console.log("PLAYER DONE ATTACK:", this.state.playerDoneAttack);
     console.log("ATTACK ARRAY:", this.state.attackArray);
     console.log("DEFENSE ARRAY:", this.state.defenseArray);
     console.log("PLAYAREA ARRAY:", this.state.playAreaArray);
-    // console.log("PLAYER CLICKED CARD:", this.props.playerClickCard);
+    console.log("PLAYER CLICKED CARD:", this.props.playerClickCard);
     // // console.log("new attack cards:", this.state.newAttackCards);
     console.log("WHO STARTS:", this.props.whoStartsGame);
     return (
       <PlayAreaDiv>
-        {/* <div>PlayAreaContainer</div> */}
+        <EndOfGame
+          playerLost={this.state.endOfGamePlayerLost}
+          playerWon={this.state.endOfGamePlayerWon}
+        />
         <br></br>
-        {this.state.attackArray[0] !== null &&
-        this.state.attackArray !== null ? (
-          <AttackContainer attackArray={this.state.attackArray} />
-        ) : null}
+        {this.renderAttackContainer()}
         <br></br>
         <DefenseContainer defenseArray={this.state.defenseArray} />
       </PlayAreaDiv>
