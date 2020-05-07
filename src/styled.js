@@ -42,10 +42,22 @@ export const AttackCont = styled.div`
   // border: 2px solid palevioletred;
 `;
 
-export const DefenseCont = styled.div`
+export const DefenseContComp = styled.div`
   display: inline-flex;
   flex-direction: row;
   // border: 2px solid palevioletred;
+  position: relative;
+  bottom: 86px;
+  // right: 2px;
+`;
+
+export const DefenseContPlayer = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  // border: 2px solid palevioletred;
+  position: relative;
+  bottom: 86px;
+  right: 40px;
 `;
 
 export const Card = styled.div`
@@ -102,11 +114,19 @@ export const PlayAreaDiv = styled.div`
 export const GuidDiv = styled.div`
   display: inline-block;
   position: fixed;
-  height: 300px;
-  width: 200px;
-  right: 1250px;
-  //   bottom: 400px;
-  border: 2px solid navy;
+  height: 500px;
+  width: 570px;
+  right: 1100px;
+  bottom: 190px;
+  // border: 2px solid navy;
+`;
+
+export const GuidPoints = styled.div`
+  font-size: 0.9em;
+  color: LightBlue;
+  margin: 0.6em;
+  // padding: 0.4em;
+  // padding: 0.1em 0.5em;
 `;
 
 export const CompAvaDiv = styled.div`

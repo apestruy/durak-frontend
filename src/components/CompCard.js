@@ -5,7 +5,7 @@ const CompCard = (props) => {
   return (
     <div>
       <Card>
-        <Image src={props.card.imageUrl} alt="computer card" />
+        <Image src={props.card.imageBack} alt="computer card" />
         {/* <CompH5>
           {props.card.value}, {props.card.suit}
         </CompH5> */}

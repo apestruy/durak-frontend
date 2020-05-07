@@ -1,6 +1,6 @@
 import React from "react";
 import DefenseCard from "../components/DefenseCard";
-import { DefenseCont } from "../styled";
+import { DefenseContComp, DefenseContPlayer } from "../styled";
 
 class DefenseContainer extends React.Component {
   renderDefenseCards = () => {
@@ -11,8 +11,16 @@ class DefenseContainer extends React.Component {
   };
 
   render() {
-    // console.log(this.props.defenseArray);
-    return <DefenseCont>{this.renderDefenseCards()}</DefenseCont>;
+    return (
+      <div>
+        {this.props.playerAttacks || this.props.compDefends ? (
+          <DefenseContComp>{this.renderDefenseCards()}</DefenseContComp>
+        ) : null}
+        {this.props.compAttacks || this.props.playerDefends ? (
+          <DefenseContPlayer>{this.renderDefenseCards()}</DefenseContPlayer>
+        ) : null}
+      </div>
+    );
   }
 }
 

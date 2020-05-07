@@ -11,8 +11,11 @@ class AttackContainer extends React.Component {
   };
 
   render() {
-    // console.log(this.props.attackArray);
-    return <AttackCont>{this.renderAttackCards()}</AttackCont>;
+    return (
+      <div>
+        <AttackCont>{this.renderAttackCards()}</AttackCont>
+      </div>
+    );
   }
 }
 

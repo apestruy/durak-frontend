@@ -43,6 +43,13 @@ class PlayAreaContainer extends React.Component {
       console.log("PLAYER WON!");
       this.endOfGamePlayerWon();
       this.props.defender("");
+      // } else if (
+      //   this.props.lengthPlayerHand === 0 &&
+      //   this.props.sendCompArray.length === 0 &&
+      //   this.state.playerAttacks &&
+      //   this.props.pile === 0
+      // ) {
+      //   console.log("It's a tie!");
     } else if (
       (this.props.compNextAttackCard === undefined &&
         this.state.compDoneAttack &&
@@ -458,7 +465,13 @@ class PlayAreaContainer extends React.Component {
         <br></br>
         {this.renderAttackContainer()}
         <br></br>
-        <DefenseContainer defenseArray={this.state.defenseArray} />
+        <DefenseContainer
+          defenseArray={this.state.defenseArray}
+          compDefends={this.state.compDefends}
+          playerAttacks={this.state.playerAttacks}
+          playerDefends={this.state.playerDefends}
+          compAttacks={this.state.compAttacks}
+        />
       </PlayAreaDiv>
     );
   }
